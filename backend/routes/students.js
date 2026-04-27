@@ -1,6 +1,10 @@
 const express  = require('express');
 const router   = express.Router();
 const db       = require('../config/db');
+const { authenticate, adminOnly } = require('../middleware/auth');
+
+// All student routes require authentication + admin role
+router.use(authenticate, adminOnly);
 
 // GET /api/students — Get All Students
 router.get('/', async (req, res) => {

@@ -1,9 +1,10 @@
 const express = require('express');
 const router  = express.Router();
 const db      = require('../config/db');
+const { authenticate, adminOnly } = require('../middleware/auth');
 
-// GET /api/courses — Display All Courses
-router.get('/', async (req, res) => {
+// GET /api/courses — Display All Courses (public / any authenticated user)
+router.get('/', authenticate, async (req, res) => {
     try {
         const [rows] = await db.query('SELECT * FROM courses ORDER BY created_at DESC');
         res.json({ success: true, data: rows });
@@ -13,7 +14,7 @@ router.get('/', async (req, res) => {
 });
 
 // GET /api/courses/:id — Get Course Detail
-router.get('/:id', async (req, res) => {
+router.get('/:id', authenticate, async (req, res) => {
     try {
         const [rows] = await db.query('SELECT * FROM courses WHERE id = ?', [req.params.id]);
         if (!rows.length) return res.status(404).json({ success: false, message: 'Course not found' });
@@ -23,8 +24,8 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// POST /api/courses — Add Course
-router.post('/', async (req, res) => {
+// POST /api/courses — Add Course (admin only)
+router.post('/', authenticate, adminOnly, async (req, res) => {
     const { title, description, instructor, credits } = req.body;
     if (!title) return res.status(400).json({ success: false, message: 'Title is required' });
     try {
@@ -39,8 +40,8 @@ router.post('/', async (req, res) => {
     }
 });
 
-// PUT /api/courses/:id — Edit Course
-router.put('/:id', async (req, res) => {
+// PUT /api/courses/:id — Edit Course (admin only)
+router.put('/:id', authenticate, adminOnly, async (req, res) => {
     const { title, description, instructor, credits } = req.body;
     try {
         const [check] = await db.query('SELECT id FROM courses WHERE id = ?', [req.params.id]);
@@ -56,8 +57,8 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// DELETE /api/courses/:id — Delete Course
-router.delete('/:id', async (req, res) => {
+// DELETE /api/courses/:id — Delete Course (admin only)
+router.delete('/:id', authenticate, adminOnly, async (req, res) => {
     try {
         const [check] = await db.query('SELECT id FROM courses WHERE id = ?', [req.params.id]);
         if (!check.length) return res.status(404).json({ success: false, message: 'Course not found' });

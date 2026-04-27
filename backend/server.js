@@ -10,21 +10,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // ── Routes ─────────────────────────────────────────────────
+app.use('/api/auth',        require('./routes/auth'));
 app.use('/api/students',    require('./routes/students'));
 app.use('/api/courses',     require('./routes/courses'));
 app.use('/api/enrollments', require('./routes/enrollments'));
 app.use('/api/attendance',  require('./routes/attendance'));
+app.use('/api/articles',    require('./routes/articles'));
 
 // ── Health Check ────────────────────────────────────────────
 app.get('/', (req, res) => {
     res.json({
         message: 'EduBrain API is running',
-        version: '1.0.0',
+        version: '2.0.0',
         services: {
+            auth:        '/api/auth',
             students:    '/api/students',
             courses:     '/api/courses',
             enrollments: '/api/enrollments',
             attendance:  '/api/attendance',
+            articles:    '/api/articles',
         }
     });
 });
