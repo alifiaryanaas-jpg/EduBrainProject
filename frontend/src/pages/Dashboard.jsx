@@ -95,50 +95,56 @@ function StudentDashboard({ user }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // Guard clause to prevent errors if user isn't loaded yet
+        if (!user?.student_id) return;
+
         const loadProgress = async () => {
             try {
-                // Fetch enrollments, articles, and attendance
                 const [enrRes, artRes, attRes] = await Promise.all([
                     api.get(`/enrollments/student/${user.student_id}`),
                     api.get('/articles'),
                     api.get(`/attendance/student/${user.student_id}`)
                 ]);
 
-                const enrollments = enrRes.data.data;
-                const articles = artRes.data.data;
-                const attendance = attRes.data.data;
+                const enrollments = enrRes.data.data || [];
+                const articles = artRes.data.data || [];
+                const attendance = attRes.data.data || [];
 
                 const todayStr = new Date().toISOString().slice(0, 10);
 
                 const courseProgress = enrollments.map(enr => {
-                    const linkedArt = articles.find(a => String(a.course_id) === String(enr.course_id));
-                    const todayAtt = attendance.find(a => String(a.course_id) === String(enr.course_id) && a.date?.slice(0, 10) === todayStr);
+                const totalAttendanceCount = attendance.filter(att => 
+                    String(att.course_id) === String(enr.course_id)
+                ).length;
 
-                    let step = 1; // Enrolled
-                    if (!linkedArt || linkedArt.is_read) step = 2; // Read article (or no article needed)
-                    if (todayAtt) step = 3; // Attended today
+                const maxMeetings = 16;
 
-                    const pct = Math.round((step / 3) * 100);
+                const pct = Math.min(Math.round((totalAttendanceCount / maxMeetings) * 100), 100);
 
-                    return {
-                        course: enr,
-                        article: linkedArt,
-                        attended: !!todayAtt,
-                        step,
-                        pct
-                    };
-                });
+                const todayStr = new Date().toISOString().slice(0, 10);
+                const attendedToday = attendance.some(att => 
+                    String(att.course_id) === String(enr.course_id) && 
+                    att.date?.slice(0, 10) === todayStr
+                );
+
+                return {
+                    course: enr,
+                    attendanceCount: totalAttendanceCount,
+                    attendedToday: attendedToday,
+                    pct: pct
+                };
+            });
 
                 setProgress(courseProgress);
             } catch (err) {
-                console.error(err);
+                console.error("Failed to load dashboard data:", err);
             } finally {
                 setLoading(false);
             }
         };
 
         loadProgress();
-    }, [user.student_id]);
+    }, [user?.student_id]); 
 
     if (loading) return <div className="spinner-wrapper"><div className="spinner" /></div>;
 
@@ -175,7 +181,6 @@ function StudentDashboard({ user }) {
                                     </span>
                                 </div>
                                 
-                                {/* Progress Bar */}
                                 <div style={{ height: 8, background: 'var(--bg-3)', borderRadius: 4, overflow: 'hidden', marginBottom: 12 }}>
                                     <div style={{ height: '100%', width: `${p.pct}%`, background: p.pct === 100 ? '#10b981' : 'var(--primary)', transition: 'width 0.5s ease' }} />
                                 </div>
@@ -202,4 +207,3 @@ function StudentDashboard({ user }) {
         </>
     );
 }
-
