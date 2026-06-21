@@ -36,8 +36,8 @@ function AdminDashboard() {
     return (
         <>
             <div className="welcome-banner">
-                <h2>Welcome to EduBrain 🧠</h2>
-                <p>Online Learning Platform — Group 5 · IAE Semester 4 · Telkom University</p>
+                <h2>Welcome to EduBrain </h2>
+                <p>Online Learning Platform Group 5 </p>
             </div>
 
             <div className="stats-grid">

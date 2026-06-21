@@ -30,16 +30,11 @@ export default function LoginPage() {
 
     return (
         <div className="auth-screen">
-            <div className="auth-bg-blobs">
-                <div className="blob blob-1" />
-                <div className="blob blob-2" />
-                <div className="blob blob-3" />
-            </div>
 
             <div className="auth-card">
                 {/* Logo */}
                 <div className="auth-logo">
-                    <div className="auth-logo-icon">🧠</div>
+                    
                     <div>
                         <h1>EduBrain</h1>
                         <span>Learning Platform</span>

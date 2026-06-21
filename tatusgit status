@@ -1,0 +1,13 @@
+*   [33ma2d264b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mrevision1[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m Merge pull request #1 from alifiaryanaas-jpg/revision1
+[31m|[m[32m\[m  
+[31m|[m * [33m751dbac[m[33m ([m[1;31morigin/revision1[m[33m)[m revision on attendance progress
+[31m|[m [32m|[m * [33m2417fe8[m[33m ([m[1;35mrefs/stash[m[33m)[m On main: !!GitHub_Desktop<main>
+[31m|[m [32m|[m[31m/[m[34m|[m 
+[31m|[m[31m/[m[32m|[m [34m|[m 
+[31m|[m [32m|[m * [33mcc5cbc6[m index on main: 9f74d92 chore: add full database dump for easy setup
+[31m|[m [32m|[m[31m/[m  
+[31m|[m[31m/[m[32m|[m   
+* [32m|[m [33m9f74d92[m chore: add full database dump for easy setup
+[32m|[m[32m/[m  
+* [33m3251703[m feat: complete role-based access, attendance gating by articles, reading timer deadlines, and student dashboard progress tracking
+* [33m9bc2308[m Initial commit: EduBrain microservices project
